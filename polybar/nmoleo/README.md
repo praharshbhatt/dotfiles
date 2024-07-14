@@ -1,0 +1,3 @@
+- [polybar_playerctl](https://gitlab.com/Nmoleo/polybar_playerctl)
+- [wireguard_selector](https://gitlab.com/Nmoleo/rofi-wireguard-menu)
+- [Dunst Volume, Music, & Brightness Indicator](https://gitlab.com/Nmoleo/i3-volume-brightness-indicator)
