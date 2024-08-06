@@ -39,7 +39,7 @@ icons[cancel]="\Uf0156"
 
 declare -A actions
 # actions[lockscreen]="loginctl lock-session ${XDG_SESSION_ID-}"
-actions[lockscreen]="bash ~/.config/i3/i3lock/i3lock.sh"
+actions[lockscreen]="/home/praharsh/.config/i3/i3lock/i3lock.sh"
 #actions[switchuser]="???"
 actions[logout]="loginctl terminate-session ${XDG_SESSION_ID-}"
 actions[suspend]="systemctl suspend"

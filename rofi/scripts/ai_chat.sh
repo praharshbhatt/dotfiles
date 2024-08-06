@@ -16,7 +16,7 @@ markdown_renderer="glow"
 case "$selection" in
     "Chat to AI (conversational)")
         # Run the command for chatting to AI
-        $TERMINAL bash -c "ollama run llama3:8b; exec bash"
+        $TERMINAL bash -c "ollama run llama3.1:8b; exec bash"
         ;;
     "Summarize (clipboard)")
         # Run the command for summarizing clipboard
