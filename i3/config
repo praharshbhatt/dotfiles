@@ -13,12 +13,11 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-# font xft:URWGothic-Book 11
-font pango: Source Code Pro 10
+font xft:URWGothic-Book 12
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
-#font pango:DejaVu Sans Mono 8
+font pango: Source Code Pro 10
 
 # https://i3wm.org/docs/userguide.html#_focus_wrapping
 force_focus_wrapping yes
@@ -77,6 +76,7 @@ bindsym $mod+c exec rofi -modi "calc:/home/praharsh/.config/rofi/scripts/rofi-ca
 bindsym $mod+Escape exec rofi -modi "power:/home/praharsh/.config/rofi/scripts/rofi-power-menu.sh" -show power
 bindsym $mod+Shift+a exec "/home/praharsh/.config/rofi/scripts/ai_chat.sh"
 bindsym $mod+Shift+m exec "/home/praharsh/.config/rofi/scripts/xrander.sh"
+bindsym $mod+Shift+v exec "/home/praharsh/.config/rofi/scripts/rofi-mixer/src/rofi-mixer"
 
 # change focus
 bindsym $mod+h focus left
@@ -172,9 +172,6 @@ bindsym $mod+Shift+minus move scratchpad
 # Show the first scratchpad window
 bindsym $mod+Shift+plus scratchpad show
 
-# Show the sup-mail scratchpad window, if any.
-bindsym $mod+Shift+s [title="^Sup ::"] scratchpad show
-
 # Scratchpad programs
 # To find the class of an application, run: xprop | grep WM_CLASS | awk '{ print $4 }'
 exec_always [class="KeePassXC"] -name "KeePassXC" & sleep 2
@@ -263,10 +260,14 @@ client.background       #2f343f
 #     status_command i3status
 # }   
 
+
+# =======================================================
+# Notifications- Dunst
+exec_always --no-startup-id dunst -config /home/praharsh/.config/dunst/dunstrc
+
 # =======================================================
 # Set up the monitors
-# exec_always --no-startup-id xrandr --output eDP --mode 1920x1080 --rate 165 --pos 0x0 --output HDMI-1-0 --mode 3840x2160 --pos 1920x-1500
-exec_always --no-startup-id xrandr --output HDMI-1 --mode 3840x2160 --rate 120
+exec_always --no-startup-id xrandr --output HDMI-0 --mode 3840x2160 --rate 119.88
 
 # Start i3-layouts: https://github.com/eliep/i3-layouts
 exec i3-layouts
@@ -275,8 +276,8 @@ bindsym $mod+F1 exec i3l vstack && notify-send 'Layout vstack'
 bindsym $mod+F2 exec i3l hstack && notify-send 'Layout hstack'
 bindsym $mod+F3 exec i3l spiral && notify-send 'Layout spiral'
 
-# For Keychron key bindings
-exec --no-startup-id "/home/praharsh/.config/i3/keychron_bindings.sh"
+# Script that reminds you to rest your eyes every 20 minutes
+# exec --no-startup-id /home/praharsh/.config/i3/eye_strain_reminder.sh
 
 # Set workspace 1 to eDP (first monitor)
 # workspace 1 output eDP
@@ -287,35 +288,34 @@ exec --no-startup-id "/home/praharsh/.config/i3/keychron_bindings.sh"
 # workspace 4 output HDMI-1-0
 
 # Set workspaces to applications
-exec spacefm
 # exec KeePassXC
 # assign [class="KeePassXC"] 1
-assign [class="Brave Browser"] 2
+# assign [class="Brave-browser"] 2
 
 # Start the keyring
 # exec --no-startup-id gnome-keyring-daemon --start --components=ssh,secrets,pkcs11
 exec --no-startup-id gnome-keyring-daemon --start --components=ssh,secrets,pkcs11 --password-store=brave-browser
-exec --no-startup-id brave-browser --password-store=gnome
+# exec --no-startup-id brave-browser --password-store=gnome
 
 # Wallpapers
 exec --no-startup-id nitrogen --restore
-# exec --no-startup-id xwinwrap -fs -ov -ni -- mpv -wid WID -loop "/home/praharsh/.wallpapers/ThrashRacingWallpaperEngine.mp4"
-exec --no-startup-id ./animated_wallpaper.sh
+# exec --no-startup-id /home/praharsh/.config/i3/animated_wallpaper.sh
 exec --no-startup-id picom --experimental-backends -b -c --config ~/.config/picom.conf
 
 # Set applications to floating
 # browser pop-ups
 for_window [window_role="pop-up"] floating enable
+# Drag
+for_window [class="ripdrag"] floating enable
+# Bluetooth manager
+for_window [class="Blueman-manager"] floating enable
+for_window [class="Xed"] floating enable
+for_window [class="Pavucontrol"] floating enable
+
+# Start Syncthing
+exec --no-startup-id syncthing
 
 # Polybar
-# Terminate already running bar instances
-# exec_always --no-startup-id killall -q polybar
-
-# Launch Polybar, using default config location ~/.config/polybar/config.ini
-# exec_always --no-startup-id ~/.config/polybar/launch.sh --docky
-# exec_always --no-startup-id ~/.config/polybar/docky/launch.sh
-# exec_always --no-startup-id polybar -q main -c ~/.config/polybar/docky/config.ini &
-# exec_always --no-startup-id polybar -q 0 -c ~/.config/polybar/nmoleo/polybar-config.ini &
 exec_always --no-startup-id bash /home/praharsh/.config/i3/start_polybar.sh
 
 # Launch Obsidian
@@ -323,6 +323,7 @@ exec_always --no-startup-id obsidian
 
 # Screenshots
 bindsym Print exec --no-startup-id flameshot gui
+bindsym $mod+Shift+s exec --no-startup-id flameshot gui
 
 
 # Clipboard manager
