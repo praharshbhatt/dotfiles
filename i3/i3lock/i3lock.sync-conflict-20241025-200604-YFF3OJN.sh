@@ -52,7 +52,6 @@ scrot /tmp/locking_screen.png
 convert -blur 0x8 /tmp/locking_screen.png /tmp/screen_blur.png
 
 # Composite the lock image onto the blurred screenshot
-# sudo apt-get install imagemagick
 convert -composite /tmp/screen_blur.png "$SCRIPT_DIR/rick_and_morty.png" -gravity South -geometry -20x1200 /tmp/screen.png
 
 # Lock the screen using i3lock

@@ -1,0 +1,74 @@
+# ~/.config/yazi/yazi.toml
+[manager]
+linemode = "size_and_mtime"
+
+show_hidden = true
+show_symlink = true
+
+# https://yazi-rs.github.io/docs/configuration/yazi#opener
+[opener]
+edit = [
+	{ run = 'nvim "$@"', block = true, for = "unix" },
+	{ run = "nvim %*",   block = true, for = "windows" },
+]
+play = [
+	{ run = 'vlc "$@"', orphan = true, for = "unix" },
+]
+open = [
+	{ run = 'xdg-open "$@"', desc = "Open" },
+]
+pdf = [
+	{ run = 'xreader "$@"', desc = "Open PDF with xreader" },
+]
+python_exec = [
+    { run = 'kitty -- bash -c "python3 \"$@\"; exec bash"', desc = "Run Python script in terminal" }
+]
+open_with_vlc = [
+    { run = 'vlc "$1"', desc = "Open with VLC Media Player" }
+]
+convert_video = [
+    { run = 'ffmpeg -i "$1" "${1%.*}.mp4"', desc = "Convert video to mp4" }
+]
+video_compress = [
+    { run = 'python3 ~/.config/yazi/scripts/ffmpeg/video_compressor.py "$1"', desc = "Compress video(s)" }
+]
+image_compress = [
+    { run = 'python3 ~/.config/yazi/scripts/ffmpeg/image_compressor.py "$1"', desc = "Compress image(s)" }
+]
+
+# https://yazi-rs.github.io/docs/configuration/yazi#open
+[open]
+prepend_rules = [
+	{ name = "*.json", use = "edit" },
+
+	# Multiple openers for a single rule
+	{ name = "*.html", use = [ "open", "edit" ] },
+
+	# Set xreader as the default opener for PDF files
+	{ name = "*.pdf", use = [ "pdf", "open" ] },
+
+	{ name = "*.py", use = [ "edit", "python_exec" ] },
+
+  # Videos
+  { name = "*.mp4", use = [ "open", "open_with_vlc", "video_compress" ] },
+  { name = "*.mkv", use = [ "open", "open_with_vlc", "convert_video", "video_compress" ] },
+  { name = "*.webm", use = [ "open", "open_with_vlc", "convert_video", "video_compress" ] },
+  { name = "*.avi", use = [ "open", "open_with_vlc", "convert_video", "video_compress" ] },
+  { name = "*.mov", use = [ "open", "open_with_vlc", "convert_video", "video_compress" ] },
+  { name = "*.flv", use = [ "open", "open_with_vlc", "convert_video", "video_compress" ] },
+
+
+  # Images
+  { name = "*.jpg", use = ["open", "image_compress"] },
+  { name = "*.jpeg", use = ["open", "image_compress"] },
+  { name = "*.png", use = ["open", "image_compress"] },
+  { name = "*.bmp", use = ["open", "image_compress"] },
+  { name = "*.gif", use = ["open", "image_compress"] },
+  { name = "*.tiff", use = ["open", "image_compress"] },
+  { name = "*.webp", use = ["open", "image_compress"] },
+]
+
+# https://github.com/Sonico98/exifaudio.yazi[plugin]
+prepend_previewers = [
+    { mime = "audio/*",   run = "exifaudio"}
+]

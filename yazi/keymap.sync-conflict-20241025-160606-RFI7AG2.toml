@@ -1,0 +1,61 @@
+# Copy selected files to the system clipboard while yanking
+# https://yazi-rs.github.io/docs/tips#selected-files-to-clipboard
+# This is available on X11, but you can do the same on wayland (refer to the link above).
+[[manager.prepend_keymap]]
+on  = "y"
+run = [ '''
+	shell 'echo "$@" | xclip -i -selection clipboard -t text/uri-list' --confirm
+''', "yank" ]
+
+# RipDrag- Ctrl+n
+# Use RipDrag for Drag and drop
+# https://github.com/nik012003/ripdrag https://github.com/sxyazi/yazi/discussions/327
+[[manager.prepend_keymap]]
+on = [ "<C-n>" ]
+run = "shell 'ripdrag '$@' -x 2>/dev/null &' --confirm"
+desc = "RipDrag- Drag and Drop"
+
+# Go to Projects
+[[manager.prepend_keymap]]
+on   = [ "g", "p" ]
+run  = "cd /mnt/linux_ssd_storage/projects"
+desc = "Go to projects directory"
+
+# Go to Praharsh
+[[manager.prepend_keymap]]
+on   = [ "g", "P" ]
+run  = "cd /mnt/praharsh"
+desc = "Go to praharsh directory"
+
+# Go to Multiverse Software
+[[manager.prepend_keymap]]
+on   = [ "g", "M" ]
+run  = "cd /mnt/multiverse_software"
+desc = "Go to multiverse_software directory"
+
+# Go to Media
+[[manager.prepend_keymap]]
+on   = [ "g", "m" ]
+run  = "cd /mnt/media"
+desc = "Go to media directory"
+
+# Archive selected files
+# https://github.com/KKV9/compress.yazi
+[[manager.prepend_keymap]]
+on   = [ "c", "A" ]
+run  = "plugin compress"
+desc = "Archive selected files"
+ 
+# Diff the selected file with the hovered file
+# https://github.com/yazi-rs/plugins/tree/main/diff.yazi
+[[manager.prepend_keymap]]
+on   = "<C-d>"
+run  = "plugin diff"
+desc = "Diff the selected with the hovered file"
+
+# calculate the size of the current selection or the current working directory (if no selection is made).
+# https://github.com/pirafrank/what-size.yazi
+[[manager.prepend_keymap]]
+on = [ ".", "s" ]
+run  = "plugin what-size"
+desc = "Calc size of selection or the cwd"

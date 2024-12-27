@@ -60,11 +60,6 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
-# start a terminal
-# bindsym $mod+Return exec gnome-terminal
-# removing this in the favour of kitty from scratchpad
-# bindsym $mod+Return exec kitty
-
 # kill focused window
 bindsym $mod+q kill
 
@@ -77,6 +72,7 @@ bindsym $mod+Escape exec rofi -modi "power:/home/praharsh/.config/rofi/scripts/r
 bindsym $mod+Shift+a exec "/home/praharsh/.config/rofi/scripts/ai_chat.sh"
 bindsym $mod+Shift+m exec "/home/praharsh/.config/rofi/scripts/xrander.sh"
 bindsym $mod+Shift+v exec "/home/praharsh/.config/rofi/scripts/rofi-mixer/src/rofi-mixer"
+bindsym $mod+Shift+t exec "/home/praharsh/.config/rofi/scripts/piper-speak.sh"
 
 # change focus
 bindsym $mod+h focus left
@@ -174,18 +170,25 @@ bindsym $mod+Shift+plus scratchpad show
 
 # Scratchpad programs
 # To find the class of an application, run: xprop | grep WM_CLASS | awk '{ print $4 }'
-exec_always [class="KeePassXC"] -name "KeePassXC" & sleep 2
-for_window [instance="KeePassXC"] move scratchpad
-bindsym $mod+Ctrl+k [class="KeePassXC"] scratchpad Show, move position center
+exec --no-startup-id kitty --name "kitty"
+for_window [instance="kitty"] floating enable, move scratchpad
+bindsym $mod+Return [instance="kitty"] scratchpad Show, move position center
 
-exec_always kitty -name "kitty"
-for_window [instance="kitty"] move scratchpad
-bindsym $mod+Return [class="kitty"] scratchpad Show, move position center
-
-exec_always obsidian -name "obsidian"
-for_window [instance="obsidian"] move scratchpad
+exec --no-startup-id obsidian --name "obsidian"
+for_window [class="obsidian"] floating enable, move scratchpad
 bindsym $mod+Ctrl+o [class="obsidian"] scratchpad Show, move position center
 
+exec --no-startup-id KeePassXC --name "KeePassXC"
+for_window [class="KeePassXC"] floating enable, move scratchpad
+bindsym $mod+Ctrl+k [class="KeePassXC"] scratchpad Show, move position center
+
+exec_always --no-startup-id signal --name "signal"
+for_window [class="signal"] floating enable, move scratchpad
+bindsym $mod+Ctrl+s [class="signal"] scratchpad Show, move position center
+
+exec_always --no-startup-id thunderbird --name "thunderbird"
+for_window [class="thunderbird"] floating enable, move scratchpad
+bindsym $mod+Ctrl+T [class="thunderbird"] scratchpad Show, move position center
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -313,7 +316,7 @@ for_window [class="Xed"] floating enable
 for_window [class="Pavucontrol"] floating enable
 
 # Start Syncthing
-exec --no-startup-id syncthing
+exec --no-startup-id 'syncthing serve'
 
 # Polybar
 exec_always --no-startup-id bash /home/praharsh/.config/i3/start_polybar.sh
@@ -327,8 +330,9 @@ bindsym $mod+Shift+s exec --no-startup-id flameshot gui
 
 
 # Clipboard manager
-# exec_always --no-startup-id /usr/bin/diodon
-bindsym $mod+v exec --no-startup-id /usr/bin/diodon
+# Start diodon, and binf the key
+exec_always --no-startup-id diodon
+bindsym $mod+v exec --no-startup-id diodon
 
 # Other scripts
 # exec_always --no-startup-id python3 /home/praharsh/Downloads/python_email/python_email.py
