@@ -1,0 +1,10 @@
+git:
+  autofetch: true
+  merging:
+    args: ""
+    manualcommit: false
+  paging:
+    colorarg: always
+    #useconfig: false
+    colorArg: always
+    pager: delta --dark --line-numbers --paging=never  # sudo apt install git-delta

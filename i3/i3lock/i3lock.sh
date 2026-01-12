@@ -1,4 +1,13 @@
 #!/bin/bash
+LOG="/tmp/i3lock_debug.log"
+exec > >(tee -a "$LOG") 2>&1
+set -x
+# Grab the above logs in the following way:
+#
+# journalctl -b -1 | grep i3lock
+# journalctl -b -1 | grep xss-lock
+#
+#
 
 # Get the directory where the script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -56,7 +65,7 @@ convert -blur 0x8 /tmp/locking_screen.png /tmp/screen_blur.png
 convert -composite /tmp/screen_blur.png "$SCRIPT_DIR/rick_and_morty.png" -gravity South -geometry -20x1200 /tmp/screen.png
 
 # Lock the screen using i3lock
-i3lock -i /tmp/screen.png
+i3lock -i /tmp/screen.png --nofork --show-failed-attempts --ignore-empty-password --tiling
 
 # Call revert function to clean up temporary files and reset settings
 revert

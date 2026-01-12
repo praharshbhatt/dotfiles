@@ -16,23 +16,23 @@ markdown_renderer="glow -"
 case "$selection" in
     "Chat to AI (conversational)")
         # Run the command for chatting to AI
-        $TERMINAL bash -c "ollama run llama3.2-vision; exec bash"
+        $TERMINAL bash -c "ollama run deepseek-r1:32b; exec bash"
         ;;
     "Short Summary (clipboard)")
         # Run the command for summarizing clipboard
-        $TERMINAL bash -c "xclip -selection clipboard -o | fabric -sp create_5_sentence_summary | $markdown_renderer ; exec bash"
+        $TERMINAL bash -c "xclip -selection clipboard -o | fabric --pattern create_5_sentence_summary | $markdown_renderer ; exec bash"
         ;;
     "Summarize (clipboard)")
         # Run the command for summarizing clipboard
-        $TERMINAL bash -c "xclip -selection clipboard -o | fabric -sp summarize | $markdown_renderer ; exec bash"
+        $TERMINAL bash -c "xclip -selection clipboard -o | fabric --pattern summarize | $markdown_renderer ; exec bash"
         ;;
     "Long Summary (clipboard)")
         # Run the command for extracting wisdom from clipboard
-        $TERMINAL bash -c "xclip -selection clipboard -o | fabric -sp create_summary | $markdown_renderer ; exec bash"
+        $TERMINAL bash -c "xclip -selection clipboard -o | fabric --pattern create_summary | $markdown_renderer ; exec bash"
         ;;
     "Extract Wisdom (clipboard)")
         # Run the command for extracting wisdom from clipboard
-        $TERMINAL bash -c "xclip -selection clipboard -o | fabric -sp extract_wisdom | $markdown_renderer ; exec bash"
+        $TERMINAL bash -c "xclip -selection clipboard -o | fabric --pattern extract_wisdom | $markdown_renderer ; exec bash"
         ;;
     "Extract Wisdom (YouTube)")
         # Run the command for extracting wisdom from a YouTube transcript

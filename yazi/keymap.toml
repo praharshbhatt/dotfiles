@@ -21,10 +21,24 @@ on   = [ "g", "p" ]
 run  = "cd /mnt/projects"
 desc = "Go to projects directory"
 
-# Go to Praharsh
+# Go to praharsh
 [[manager.prepend_keymap]]
 on   = [ "g", "P" ]
 run  = "cd /mnt/praharsh"
+desc = "Go to praharsh directory"
+timeout = 1000
+
+# Go to pictures
+[[manager.prepend_keymap]]
+on   = [ "g", "I" ]
+run  = "cd /mnt/praharsh/pictures/My Pictures/"
+desc = "Go to My Pictures directory"
+timeout = 1000
+
+# Go to Praharsh/documents
+[[manager.prepend_keymap]]
+on   = [ "g", "D" ]
+run  = "cd /mnt/praharsh/documents"
 desc = "Go to praharsh directory"
 
 # Go to Multiverse Software

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define available scaling options
-options="0.5\n0.7\n1\n1.2\n1.5\n2\n2.2"
+options="0.4\n0.5\n0.7\n1\n1.2\n1.5\n2\n2.2"
 
 # Get user selection from Rofi
 selected=$(echo -e "$options" | rofi -dmenu -p "Select Scaling Factor:")

@@ -15,8 +15,7 @@ set $mod Mod4
 # is used in the bar {} block below.
 font xft:URWGothic-Book 12
 
-# This font is widely installed, provides lots of unicode glyphs, right-to-left
-# text rendering and scalability on retina/hidpi displays (thanks to pango).
+# This font is widely installed, provides lots of unicode glyphs, right-to-left text rendering and scalability on retina/hidpi displays (thanks to pango).
 font pango: Source Code Pro 10
 
 # https://i3wm.org/docs/userguide.html#_focus_wrapping
@@ -44,18 +43,35 @@ exec --no-startup-id dex --autostart --environment i3
 # screen before suspend. Use loginctl lock-session to lock your screen.
 # exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # Implements custom lock sreen script located in /i3lock/i3lock.sh
-exec --no-startup-id xss-lock --transfer-sleep-lock -- /home/praharsh/.config/i3/i3lock/i3lock.sh --turn-off-display
+# exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/.config/i3/i3lock/i3lock.sh --turn-off-display
+
+# Setup xss-lock daemon
+exec_always --no-startup-id xset +dpms dpms 0 300 300 
+exec_always --no-startup-id xss-lock --transfer-sleep-lock -- ~/.config/i3/i3lock/i3lock.sh
+
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
 
-# Use pactl to adjust volume in PulseAudio.
+# Start onboard virtual keyboard for Surface touch input
+exec --no-startup-id onboard --layout=Compact
+
+# Set mouse and touchpad sensitivity using transformation matrix (2 = 2x speed, 1.5 = 1.5x speed, etc.)
+exec_always --no-startup-id xinput set-prop "Microsoft Surface 045E:09AF Mouse" 'Coordinate Transformation Matrix' 2 0 0 0 2 0 0 0 1
+exec_always --no-startup-id xinput set-prop "Microsoft Surface 045E:09AF Touchpad" 'Coordinate Transformation Matrix' 2 0 0 0 2 0 0 0 1
+
+# Surface keyboard shortcuts
+# Use pactl to adjust volume in PulseAudio for the surface keyboard
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+# Brightness- surface keyboard
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +2.5% && $refresh_i3status
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 2.5%- && $refresh_i3status
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -67,12 +83,13 @@ bindsym $mod+q kill
 # bindsym $mod+d exec --no-startup-id dmenu_run
 bindsym $mod+space exec rofi -show drun
 bindsym $mod+period exec rofimoji
-bindsym $mod+c exec rofi -modi "calc:/home/praharsh/.config/rofi/scripts/rofi-calc.sh" -show calc
-bindsym $mod+Escape exec rofi -modi "power:/home/praharsh/.config/rofi/scripts/rofi-power-menu.sh" -show power
-bindsym $mod+Shift+a exec "/home/praharsh/.config/rofi/scripts/ai_chat.sh"
-bindsym $mod+Shift+m exec "/home/praharsh/.config/rofi/scripts/xrander.sh"
-bindsym $mod+Shift+v exec "/home/praharsh/.config/rofi/scripts/rofi-mixer/src/rofi-mixer"
-bindsym $mod+Shift+t exec "/home/praharsh/.config/rofi/scripts/piper-speak.sh"
+bindsym $mod+c exec rofi -modi "calc:~/.config/rofi/scripts/rofi-calc.sh" -show calc
+bindsym $mod+Escape exec rofi -modi "power:~/.config/rofi/scripts/rofi-power-menu.sh" -show power
+bindsym $mod+Shift+a exec "~/.config/rofi/scripts/ai_chat.sh"
+bindsym $mod+Shift+m exec "~/.config/rofi/scripts/xrander.sh"
+bindsym $mod+Shift+i exec "~/.config/rofi/scripts/rofi-mixer/src/rofi-mixer-microphone"
+bindsym $mod+Shift+v exec "~/.config/rofi/scripts/rofi-mixer/src/rofi-mixer"
+bindsym $mod+Shift+t exec "~/.config/rofi/scripts/piper-speak.sh"
 
 # change focus
 bindsym $mod+h focus left
@@ -116,7 +133,7 @@ bindsym $mod+e layout toggle split
 bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+tab focus mode_toggle
+bindsym $mod+g focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -170,25 +187,37 @@ bindsym $mod+Shift+plus scratchpad show
 
 # Scratchpad programs
 # To find the class of an application, run: xprop | grep WM_CLASS | awk '{ print $4 }'
-exec --no-startup-id kitty --name "kitty"
+# exec --no-startup-id kitty --name "kitty"
+exec --no-startup-id kitty --session ~/.config/kitty/startup.session --name "kitty"
 for_window [instance="kitty"] floating enable, move scratchpad
 bindsym $mod+Return [instance="kitty"] scratchpad Show, move position center
 
+# Bluetooth
+exec --no-startup-id blueman-manager --name "blueman-manager"
+for_window [instance="blueman-manager"] floating enable, move scratchpad
+bindsym $mod+Ctrl+B [instance="blueman-manager"] scratchpad Show, move position center
+
+# Obsidian
 exec --no-startup-id obsidian --name "obsidian"
 for_window [class="obsidian"] floating enable, move scratchpad
-bindsym $mod+Ctrl+o [class="obsidian"] scratchpad Show, move position center
+bindsym $mod+Ctrl+O [class="obsidian"] scratchpad Show, move position center
 
-exec --no-startup-id KeePassXC --name "KeePassXC"
-for_window [class="KeePassXC"] floating enable, move scratchpad
-bindsym $mod+Ctrl+k [class="KeePassXC"] scratchpad Show, move position center
+# Calendar webapp - match by instance name since it's a Brave browser window
+exec --no-startup-id brave-browser --app=https://calendar.google.com/calendar/u/0/r/week --new-window
+for_window [instance="calendar.google.com"] floating enable, move scratchpad
+bindsym $mod+Ctrl+C [instance="calendar.google.com"] scratchpad Show, move position center
 
-exec_always --no-startup-id signal --name "signal"
-for_window [class="signal"] floating enable, move scratchpad
-bindsym $mod+Ctrl+s [class="signal"] scratchpad Show, move position center
+# ChatGPT webapp - match by instance name since it's a Brave browser window
+exec --no-startup-id brave-browser --app=https://chatgpt.com --new-window
+for_window [instance="chatgpt.com"] floating enable, move scratchpad
+bindsym $mod+Ctrl+A [instance="chatgpt.com"] scratchpad Show, move position center
 
-exec_always --no-startup-id thunderbird --name "thunderbird"
-for_window [class="thunderbird"] floating enable, move scratchpad
-bindsym $mod+Ctrl+T [class="thunderbird"] scratchpad Show, move position center
+# Start other windows
+exec --no-startup-id ~/.config/i3/setup_startup_windows.sh
+
+# Toggle sticky
+bindsym $mod+Shift+period sticky toggle
+
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -205,16 +234,16 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym j resize shrink height 50 px or 50 ppt
-        bindsym k resize grow height 50 px or 50 ppt
+        bindsym j resize grow height 50 px or 50 ppt
+        bindsym k resize shrink height 50 px or 50 ppt
         bindsym h resize shrink width 50 px or 50 ppt
         bindsym l resize grow width 50 px or 50 ppt
 
         # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
+        bindsym Left resize grow width 10 px or 10 ppt
+        bindsym Down resize shrink height 10 px or 10 ppt
+        bindsym Up resize grow height 10 px or 10 ppt
+        bindsym Right resize shrink width 10 px or 10 ppt
 
         # back to normal: Enter or Escape or $mod+r
         bindsym Return mode "default"
@@ -231,17 +260,19 @@ bindsym $mod+Ctrl+Left resize grow width 50 px or 50 ppt
 
 # =======================================================
 # Gaps
-gaps inner 12
-gaps outer 4
+gaps inner 8
+gaps outer 6
+
+# Smart_gaps means that i3 only draw gaps if more than one container is in the workspace.
 smart_gaps on
 
 # =======================================================
 # Colors
 # colour of border, background, text, indicator, and child_border
-client.focused          #bf616a #2f343f #979CA6 #bf616a #979CA6
-client.focused_inactive #2f343f #2f343f #979CA6 #2f343f #2f343f
+client.focused          #7F00FF #2f343f #979CA6 #7F00FF #7F00FF
+client.focused_inactive #51414F #2f343f #979CA6 #51414F #51414F
 client.unfocused        #2f343f #2f343f #979CA6 #2f343f #2f343f
-client.urgent           #2f343f #2f343f #979CA6 #2f343f #2f343f
+client.urgent           #800020 #2f343f #979CA6 #800020 #800020
 client.placeholder      #2f343f #2f343f #979CA6 #2f343f #2f343f
 client.background       #2f343f
 
@@ -266,7 +297,7 @@ client.background       #2f343f
 
 # =======================================================
 # Notifications- Dunst
-exec_always --no-startup-id dunst -config /home/praharsh/.config/dunst/dunstrc
+exec_always --no-startup-id dunst -config ~/.config/dunst/dunstrc
 
 # =======================================================
 # Set up the monitors
@@ -280,7 +311,7 @@ bindsym $mod+F2 exec i3l hstack && notify-send 'Layout hstack'
 bindsym $mod+F3 exec i3l spiral && notify-send 'Layout spiral'
 
 # Script that reminds you to rest your eyes every 20 minutes
-# exec --no-startup-id /home/praharsh/.config/i3/eye_strain_reminder.sh
+exec --no-startup-id ~/.config/i3/eye_strain_reminder.sh
 
 # Set workspace 1 to eDP (first monitor)
 # workspace 1 output eDP
@@ -300,10 +331,12 @@ bindsym $mod+F3 exec i3l spiral && notify-send 'Layout spiral'
 exec --no-startup-id gnome-keyring-daemon --start --components=ssh,secrets,pkcs11 --password-store=brave-browser
 # exec --no-startup-id brave-browser --password-store=gnome
 
+# Star gnome settings daemon for theme: https://www.reddit.com/r/i3wm/comments/aofxgl/comment/eg64u8b/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+exec_always --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
+
 # Wallpapers
 exec --no-startup-id nitrogen --restore
-# exec --no-startup-id /home/praharsh/.config/i3/animated_wallpaper.sh
-exec --no-startup-id picom --experimental-backends -b -c --config ~/.config/picom.conf
+exec --no-startup-id picom
 
 # Set applications to floating
 # browser pop-ups
@@ -314,15 +347,28 @@ for_window [class="ripdrag"] floating enable
 for_window [class="Blueman-manager"] floating enable
 for_window [class="Xed"] floating enable
 for_window [class="Pavucontrol"] floating enable
+# Onboard virtual keyboard - make it floating and sticky across all workspaces
+for_window [class="Onboard"] floating enable, sticky enable, border none
 
 # Start Syncthing
-exec --no-startup-id 'syncthing serve'
+exec --no-startup-id 'syncthing -no-browser'
 
 # Polybar
-exec_always --no-startup-id bash /home/praharsh/.config/i3/start_polybar.sh
+exec_always --no-startup-id bash ~/.config/i3/start_polybar.sh
 
 # Launch Obsidian
 exec_always --no-startup-id obsidian
+
+# KDE-connect
+# kdeconnect-indicator shows a tray icon and handles device discovery/UI.
+# kdeconnectd is the daemon that handles the actual communication with devices.
+exec_always --no-startup-id kdeconnectd &
+exec_always --no-startup-id kdeconnect-indicator &
+# exec --no-startup-id kdeconnectd &
+# If you're using systemd user services (recommended for robustness), enable via:
+# systemctl --user enable kdeconnectd.service
+
+exec_always --no-startup-id pulseaudio --start &
 
 # Screenshots
 bindsym Print exec --no-startup-id flameshot gui
@@ -331,8 +377,8 @@ bindsym $mod+Shift+s exec --no-startup-id flameshot gui
 
 # Clipboard manager
 # Start diodon, and binf the key
-exec_always --no-startup-id diodon
+exec --no-startup-id diodon
 bindsym $mod+v exec --no-startup-id diodon
 
 # Other scripts
-# exec_always --no-startup-id python3 /home/praharsh/Downloads/python_email/python_email.py
+# exec_always --no-startup-id python3 ~/Downloads/python_email/python_email.py

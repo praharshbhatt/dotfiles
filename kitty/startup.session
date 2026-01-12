@@ -1,0 +1,11 @@
+# ~/.config/kitty/startup.session
+
+new_tab yazi
+cd ~
+launch yazi ~/Downloads/
+
+new_tab projects_1
+cd /mnt/projects/
+
+new_tab projects_2
+cd /mnt/projects/

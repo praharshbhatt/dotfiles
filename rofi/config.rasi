@@ -17,4 +17,4 @@
 
 @import "rounded-common.rasi"
 //@theme "/home/praharsh/.local/share/rofi/themes/rounded-nord-dark.rasi"
-@theme "../rofi/themes/rounded-purple-dark.rasi"
+@theme "../rofi/themes/nightfox-purple-dark.rasi"

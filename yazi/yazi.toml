@@ -19,6 +19,7 @@ open = [
 ]
 pdf = [
 	{ run = 'xreader "$@"', desc = "Open PDF with xreader" },
+	{ run = 'evince "$@"', desc = "Open PDF with Evince" },
 ]
 python_exec = [
     { run = 'kitty -- bash -c "python3 \"$@\"; exec bash"', desc = "Run Python script in terminal" }
