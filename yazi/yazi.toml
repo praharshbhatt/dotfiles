@@ -18,8 +18,10 @@ open = [
 	{ run = 'xdg-open "$@"', desc = "Open" },
 ]
 pdf = [
+	{ run = 'zathura "$@"', desc = "Open PDF with Zathura" },
+]
+xreader = [
 	{ run = 'xreader "$@"', desc = "Open PDF with xreader" },
-	{ run = 'evince "$@"', desc = "Open PDF with Evince" },
 ]
 python_exec = [
     { run = 'kitty -- bash -c "python3 \"$@\"; exec bash"', desc = "Run Python script in terminal" }
@@ -34,42 +36,48 @@ video_compress = [
     { run = 'python3 ~/.config/yazi/scripts/ffmpeg/video_compressor.py "$1"', desc = "Compress video(s)" }
 ]
 image_compress = [
-    { run = 'python3 ~/.config/yazi/scripts/ffmpeg/image_compressor.py "$1"', desc = "Compress image(s)" }
+    { run = 'python3 ~/.config/yazi/scripts/ffmpeg/image_compressor.py "$1"', block = true, desc = "Compress image(s)" }
+]
+image_convert = [
+    { run = 'kitty -- bash -c "python3 ~/.config/yazi/scripts/ffmpeg/image_converter.py \"$1\"; exec bash"', block = true, desc = "Convert image format" }
 ]
 
 # https://yazi-rs.github.io/docs/configuration/yazi#open
 [open]
 prepend_rules = [
-	{ name = "*.json", use = "edit" },
+	{ url = "*.json", use = "edit" },
 
 	# Multiple openers for a single rule
-	{ name = "*.html", use = [ "open", "edit" ] },
+	{ url = "*.html", use = [ "open", "edit" ] },
 
-	# Set xreader as the default opener for PDF files
-	{ name = "*.pdf", use = [ "pdf", "open" ] },
+	# Set zathura as the default opener for PDF files, with xreader as alternative
+	{ url = "*.pdf", use = [ "pdf", "xreader", "open" ] },
 
-	{ name = "*.py", use = [ "edit", "python_exec" ] },
+	{ url = "*.py", use = [ "edit", "python_exec" ] },
 
   # Videos
-  { name = "*.mp4", use = [ "open", "open_with_vlc", "video_compress" ] },
-  { name = "*.mkv", use = [ "open", "open_with_vlc", "convert_video", "video_compress" ] },
-  { name = "*.webm", use = [ "open", "open_with_vlc", "convert_video", "video_compress" ] },
-  { name = "*.avi", use = [ "open", "open_with_vlc", "convert_video", "video_compress" ] },
-  { name = "*.mov", use = [ "open", "open_with_vlc", "convert_video", "video_compress" ] },
-  { name = "*.flv", use = [ "open", "open_with_vlc", "convert_video", "video_compress" ] },
+  { url = "*.mp4", use = [ "open", "open_with_vlc", "video_compress" ] },
+  { url = "*.mkv", use = [ "open", "open_with_vlc", "convert_video", "video_compress" ] },
+  { url = "*.webm", use = [ "open", "open_with_vlc", "convert_video", "video_compress" ] },
+  { url = "*.avi", use = [ "open", "open_with_vlc", "convert_video", "video_compress" ] },
+  { url = "*.mov", use = [ "open", "open_with_vlc", "convert_video", "video_compress" ] },
+  { url = "*.flv", use = [ "open", "open_with_vlc", "convert_video", "video_compress" ] },
 
 
   # Images
-  { name = "*.jpg", use = ["open", "image_compress"] },
-  { name = "*.jpeg", use = ["open", "image_compress"] },
-  { name = "*.png", use = ["open", "image_compress"] },
-  { name = "*.bmp", use = ["open", "image_compress"] },
-  { name = "*.gif", use = ["open", "image_compress"] },
-  { name = "*.tiff", use = ["open", "image_compress"] },
-  { name = "*.webp", use = ["open", "image_compress"] },
+  { url = "*.jpg", use = ["open", "image_convert", "image_compress"] },
+  { url = "*.jpeg", use = ["open", "image_convert", "image_compress"] },
+  { url = "*.png", use = ["open", "image_convert", "image_compress"] },
+  { url = "*.bmp", use = ["open", "image_convert", "image_compress"] },
+  { url = "*.gif", use = ["open", "image_convert", "image_compress"] },
+  { url = "*.tiff", use = ["open", "image_convert", "image_compress"] },
+  { url = "*.webp", use = ["open", "image_convert", "image_compress"] },
+  { url = "*.svg", use = ["open", "image_convert"] },
+  { url = "*.ico", use = ["open", "image_convert"] },
 ]
 
-# https://github.com/Sonico98/exifaudio.yazi[plugin]
+# https://github.com/Sonico98/exifaudio.yazi
+[plugin]
 prepend_previewers = [
     { mime = "audio/*",   run = "exifaudio"}
 ]

@@ -9,8 +9,13 @@ local options = {
       "--line-number",
       "--column",
       "--smart-case",
+      -- NOTE: "-j1" (single-thread ripgrep) was previously set here to prevent
+      -- memory exhaustion crashes on live_grep (see telescope issue #1379). It
+      -- was removed because it made grep ~4–8× slower on any project with more
+      -- than a few hundred files. If memory crashes come back, add "-j2" as a
+      -- middle ground before going back to "-j1".
     },
-    prompt_prefix = "   ",
+    prompt_prefix = "   ",
     selection_caret = "  ",
     entry_prefix = "  ",
     initial_mode = "insert",
@@ -49,7 +54,36 @@ local options = {
     },
   },
 
-  extensions_list = { "themes", "terms" },
+  extensions_list = {
+    "themes",
+    "terms",
+    -- fzf: uses the telescope-fzf-native C extension for sorting.
+    -- Replaces the default Lua sorter with fzf's algorithm, which is ~10×
+    -- faster for large result sets. The extension is defined in
+    -- custom/plugins.lua and compiled at install time via `make`.
+    -- NvChad's plugins/init.lua calls telescope.load_extension() for each
+    -- entry in this list automatically, so no extra setup is needed here.
+    "fzf",
+  },
+
+  -- fzf extension options: override sort algorithm and case sensitivity
+  -- per picker type. These only take effect once fzf-native is compiled.
+  --
+  -- fuzzy = true           enables fuzzy (non-exact) matching, same as default
+  -- override_generic_sorter replaces the sorter used by most pickers (grep, etc.)
+  -- override_file_sorter   replaces the sorter used by find_files / file pickers
+  -- case_mode options:
+  --   "smart_case"  → case-insensitive unless the query has an uppercase letter
+  --   "ignore_case" → always case-insensitive
+  --   "respect_case"→ always case-sensitive
+  extensions = {
+    fzf = {
+      fuzzy = true,
+      override_generic_sorter = true,
+      override_file_sorter = true,
+      case_mode = "smart_case",
+    },
+  },
 }
 
 return options
